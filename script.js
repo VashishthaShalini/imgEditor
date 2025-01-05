@@ -9,11 +9,11 @@ const fileInput = document.querySelector(".file-input"),
   chooseImgBtn = document.querySelector(".choose-img"),
   saveImgBtn = document.querySelector(".save-img");
 
-// Initial filter values and transformations
+// putting Initial filter values and transformations
 let brightness = "100", saturation = "100", inversion = "0", grayscale = "0";
 let rotate = 0, flipHorizontal = 1, flipVertical = 1;
 
-// Load image from file input and display in preview
+// Loading image from file input and display in preview
 const loadImage = () => {
   let file = fileInput.files[0];
   if (!file) return;
@@ -24,20 +24,20 @@ const loadImage = () => {
   });
 }
 
-// Apply current filter settings and transformations to preview image
+// Applying current filter settings and transformations to preview image
 const applyFilter = () => {
   previewImg.style.transform = `rotate(${rotate}deg) scale(${flipHorizontal}, ${flipVertical})`;
   previewImg.style.filter = `brightness(${brightness}%) saturate(${saturation}%) invert(${inversion}%) grayscale(${grayscale}%)`;
 }
 
-// Set up filter options event listeners
+// Setting up filter options event listeners
 filterOptions.forEach(option => {
   option.addEventListener("click", () => {
     document.querySelector(".active").classList.remove("active");
     option.classList.add("active");
     filterName.innerText = option.innerText;
 
-    // Set slider max value and current value based on selected filter
+    // Setting slider max value and current value based on selected filter
     if (option.id === "brightness") {
       filterSlider.max = "200";
       filterSlider.value = brightness;
@@ -58,12 +58,12 @@ filterOptions.forEach(option => {
   });
 });
 
-// Update filter values and apply changes when slider input changes
+// Updating filter values and apply changes when slider input changes
 const updateFilter = () => {
   filterValue.innerText = `${filterSlider.value}%`;
   const selectedFilter = document.querySelector(".filter .active");
 
-  // Update the relevant filter value based on the selected filter
+  // Updating the relevant filter value based on the selected filter
   if (selectedFilter.id === "brightness") {
     brightness = filterSlider.value;
   } else if (selectedFilter.id === "saturation") {
@@ -73,10 +73,10 @@ const updateFilter = () => {
   } else {
     grayscale = filterSlider.value;
   }
-  applyFilter(); // Apply updated filter settings
+  applyFilter(); // Applying updated filter settings
 }
 
-// Set up rotation and flip options event listeners
+// Setting up rotation and flip options event listeners
 rotateOptions.forEach(option => {
   option.addEventListener("click", () => {
     if (option.id === "left") {
@@ -88,11 +88,11 @@ rotateOptions.forEach(option => {
     } else {
       flipVertical = flipVertical === 1 ? -1 : 1;
     }
-    applyFilter(); // Apply updated transformations
+    applyFilter(); 
   });
 });
 
-// Reset all filters and transformations to default values
+// Resetting all filters and transformations to default values
 const resetFilter = () => {
   brightness = "100"; saturation = "100"; inversion = "0"; grayscale = "0";
   rotate = 0; flipHorizontal = 1; flipVertical = 1;
@@ -100,40 +100,40 @@ const resetFilter = () => {
   applyFilter(); // Apply default settings
 }
 
-// Save the current image with applied filters and transformations
+// Saving the current image with applied filters and transformations
 const saveImage = () => {
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
 
-  // Set canvas dimensions to match the image
+  // Setting canvas dimensions to match the image
   canvas.width = previewImg.naturalWidth;
   canvas.height = previewImg.naturalHeight;
 
-  // Apply current filter settings
+  // Applying current filter settings
   ctx.filter = `brightness(${brightness}%) saturate(${saturation}%) invert(${inversion}%) grayscale(${grayscale}%)`;
 
-  // Center the canvas context
+  // Centering the canvas context
   ctx.translate(canvas.width / 2, canvas.height / 2);
 
-  // Apply rotation if needed
+  // Applying rotation if needed
   if (rotate !== 0) {
     ctx.rotate(rotate * Math.PI / 180);
   }
 
-  // Apply scaling for flips
+  // Applying scaling for flips
   ctx.scale(flipHorizontal, flipVertical);
 
-  // Draw the image centered on the canvas
+  // Drawing the image centered on the canvas
   ctx.drawImage(previewImg, -canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height);
 
-  // Create a download link and trigger the download
+  // Creating a download link and trigger the download
   const link = document.createElement("a");
   link.download = "image.jpg";
   link.href = canvas.toDataURL();
   link.click();
 }
 
-// Set up event listeners for UI controls
+// Setting up event listeners for UI controls
 filterSlider.addEventListener("input", updateFilter);
 resetFilterBtn.addEventListener("click", resetFilter);
 saveImgBtn.addEventListener("click", saveImage);
